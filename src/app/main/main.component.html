@@ -1,4 +1,15 @@
 
 <div class="container">
-    
+    <mat-card *ngFor="let job of jobFetched">
+        <mat-card-header>
+            <mat-card-title>{{job.title}}</mat-card-title>
+            <mat-card-subtitle>{{job.companyname}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div>
+                <h4><b>Location:</b></h4>
+                <p>{{job.location}}</p>
+            </div>   
+        </mat-card-content>
+    </mat-card>
 </div>

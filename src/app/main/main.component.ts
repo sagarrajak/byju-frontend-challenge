@@ -18,11 +18,12 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     this.isApiCallInProgress = true;
-    this.http.get('https://nut-case.s3.amazonaws.com/jobs.json').subscribe((res: IJobType[]) => {
+    this.http.get('https://nut-case.s3.amazonaws.com/jobs.json').subscribe((res: { data: IJobType[] }) => {
       this.isApiCallInProgress = false;
-      this.jobFetched = res;
+      this.jobFetched = res.data;
     }, err => {
       this.isApiCallInProgress = false;
+      this.jobFetched = [];
     });
   }
 }
