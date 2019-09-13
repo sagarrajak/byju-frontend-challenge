@@ -1,0 +1,17 @@
+export interface IJobType {
+    applylink: string,
+    companyname: string,
+    created: string,
+    enddate: string,
+    experience: string,
+    jd: string,
+    location: string,
+    salary: string,
+    skills: string,
+    source: string,
+    startdate: string,
+    timestamp: string,
+    title: string,
+    type: string,
+    _id: string,
+};
