@@ -13,7 +13,7 @@ export interface ISearchNode {
 export class SearchServiceService {
   public globalSkillesMap: { [key: string]: ISearchNode } = {};
   public globalLocationMap: { [key: string]: ISearchNode } = {};
-  public globalExperienceMap: { [key: number]: number[] } = {};
+  public globalExperienceMap: { [key: number]: ISearchNode } = {};
 
   public skilessTri: any = null;
   public locationTri: any = null;
@@ -94,27 +94,39 @@ export class SearchServiceService {
         const exp = (job.experience.split(" ")[0]).split("-");
         if (exp.length >= 2 && !Number.isNaN(+exp[0]) && !Number.isNaN(+exp[1])) {
           for (let i: number = +exp[0]; i <= +exp[1]; i++) {
-            if (this.globalExperienceMap[i]) this.globalExperienceMap[i].push(index);
+            if (this.globalExperienceMap[i]) this.globalExperienceMap[i].ind.push(index);
             else {
-              this.globalExperienceMap[i] = [];
-              this.globalExperienceMap[i].push(index);
+              this.globalExperienceMap[i] = { 
+                ind : [index],
+                node: `${i} years` 
+              };
             }
           }
         }
         else {
           for (let i: number = 0; i <= +exp[0]; i++) {
-            if (this.globalExperienceMap[i]) this.globalExperienceMap[i].push(index);
+            if (this.globalExperienceMap[i]) this.globalExperienceMap[i].ind.push(index);
             else {
-              this.globalExperienceMap[i] = [];
-              this.globalExperienceMap[i].push(index);
+              this.globalExperienceMap[i] = { 
+                ind : [index],
+                node: `${i} years` 
+              };
             }
           }
         }
       }
       else {
-        if (this.globalExperienceMap[0]) this.globalExperienceMap[0].push(index);
+        if (this.globalExperienceMap[0]) this.globalExperienceMap[0].ind.push(index);
+        else {
+          this.globalExperienceMap[0] = { 
+            ind : [index],
+            node: `${0} years` 
+          };
+        }
       }
     });
+    this.experienceTri = new TriSearch();
+    this.experienceTri.addFromObject(this.globalExperienceMap);
   }
 
 }

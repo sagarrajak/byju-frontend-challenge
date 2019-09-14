@@ -4,7 +4,7 @@
       <mat-expansion-panel-header>Panel header</mat-expansion-panel-header>
       <div class="row">
         <div class="col-md-6 col-sm-12">
-            <test-autocomplete-single-value [controlsValues]="form('expirence')" ></test-autocomplete-single-value>
+            <test-autocomplete-single-value [controlsValues]="form('expirence')" [trie]='searchService.experienceTri'></test-autocomplete-single-value>
         </div>
         <div class="col-md-6 col-sm-12">
             <test-autocomplete-single-value [controlsValues]="form('location')" [trie]='searchService.locationTri'></test-autocomplete-single-value>

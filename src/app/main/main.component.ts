@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IJobType } from './types';
 import { SearchServiceService } from './search-service.service';
-import { AutoCompleteSingleValueParams } from '../autocomplete-single-value/autocomplete-single-value.component';
 import { Search } from './dataset';
+import { AutoCompleteParams } from '../autocomplete-single-value/autocomplete-single-value.component';
 
 @Component({
   selector: 'app-main',
@@ -16,7 +16,7 @@ export class MainComponent {
   public isApiCallInProgress: boolean = false;
   public jobFetched: IJobType[] = [];
   public skilesDataset: string[] = [];
-  public dataset: { [key: string]: AutoCompleteSingleValueParams } = {};
+  public dataset: { [key: string]: AutoCompleteParams } = {};
 
   //expirence or location or skill to search jobs
   public searchForm = new FormGroup({
@@ -51,7 +51,7 @@ export class MainComponent {
 
   }
 
-  public form(str: string): AutoCompleteSingleValueParams {
+  public form(str: string): AutoCompleteParams {
     return this.dataset[str];
   }
 }

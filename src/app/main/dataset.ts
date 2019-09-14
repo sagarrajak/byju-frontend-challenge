@@ -1,11 +1,12 @@
 import { FormGroup } from '@angular/forms';
-import { AutoCompleteSingleValueParams } from '../autocomplete-single-value/autocomplete-single-value.component';
+import { AutoCompleteParams } from '../autocomplete-single-value/autocomplete-single-value.component';
 export class Search {
-    public static getAutoComplete(group: FormGroup): { [key: string]: AutoCompleteSingleValueParams } {
+    public static getAutoComplete(group: FormGroup): { [key: string]: AutoCompleteParams } {
         return {
             'expirence': {
                 control: 'expirence',
                 group,
+                ngIf: true,
                 strictMode: true, // only allow to enter using selection mode
                 name: 'expirence',
                 id: 'expirence',
@@ -15,6 +16,7 @@ export class Search {
             'location': {
                 control: 'location',
                 group,
+                ngIf: true,
                 strictMode: true, // only allow to enter using selection mode
                 name: 'location',
                 id: 'location',
@@ -24,6 +26,7 @@ export class Search {
             'skills': {
                 control: 'skills',
                 group,
+                ngIf: true,
                 strictMode: true, // only allow to enter using selection mode
                 name: 'skills',
                 id: 'skills',

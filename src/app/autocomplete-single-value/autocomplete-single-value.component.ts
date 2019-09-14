@@ -48,7 +48,7 @@ export interface AutoCompleteParams {
 export class AutocompleteSingleValueComponent extends Helper implements OnDestroy {
   @Input('controlsValues') values: AutoCompleteParams;
   public filteredOptions: Observable<Option[]>;
-  public fetchedData: any[] = [];
+  @Input('trie') trie: any = null;
   @ViewChild(MatAutocompleteTrigger, { static: false }) autocomplete: MatAutocompleteTrigger;
 
 
@@ -99,10 +99,17 @@ export class AutocompleteSingleValueComponent extends Helper implements OnDestro
 
   private _filter(value: string): Option[] {
     const searchValue = value.toLowerCase();
-    // return this.values.options.filter((textSearch: Option) =>
-    //   textSearch.viewValue.toLocaleLowerCase().includes(searchValue)
-    // );
-
+    if (this.trie) {
+      const trieData = this.trie.get(searchValue);
+      return Object.keys(trieData).map(key => {
+        return {
+          value: key,
+          viewValue: trieData[key].value.node
+        }
+      });
+    }
+    else
+      return [];
   }
 
   public displayFunction(value?: Option): string | undefined {
