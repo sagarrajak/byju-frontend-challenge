@@ -1,6 +1,7 @@
 <mat-form-field
+  *ngIf='values.ngIf'
   [formGroup]='values.group'
-  [hintLabel]='values.hintMessage'
+  [hintLabel]="values.hintMessage"
   [class.has-success]='values.group.get(values.control).valid && (values.group.get(values.control).touched || values.group.get(values.control).dirty)'
   [class.has-danger]='values.group.get(values.control).invalid && (values.group.get(values.control).touched || values.group.get(values.control).dirty)'
   >
@@ -12,14 +13,14 @@
     [id]='values.id'
     [matAutocomplete]="auto"
     type="text"
+    inpt-disable
     [required]='values.required'
     style='color:black'
-    inpt-disable
   />
   <mat-spinner *ngIf='values.isLoading' matSuffix [diameter]="20"></mat-spinner>
-  <mat-autocomplete #auto="matAutocomplete"  style='color:black'>
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]='displayFunction.bind(this)' style='color:black' (optionSelected)='changeListener()'>
     <mat-option *ngFor="let item of filteredOptions | async"  [value]="item">
-      {{item}}
+      {{item.viewValue}}
     </mat-option>
   </mat-autocomplete>
   <ng-container *ngFor='let validator of values.validations' ngProjectAs="mat-error">

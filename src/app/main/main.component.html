@@ -7,7 +7,7 @@
             <test-autocomplete-single-value [controlsValues]="form('expirence')" ></test-autocomplete-single-value>
         </div>
         <div class="col-md-6 col-sm-12">
-            <test-autocomplete-single-value [controlsValues]="form('location')"></test-autocomplete-single-value>
+            <test-autocomplete-single-value [controlsValues]="form('location')" [trie]='searchService.locationTri'></test-autocomplete-single-value>
         </div>
         <div class="col-md-6 col-sm-12">
             <test-autocomplete-single-value [controlsValues]="form('skills')" [trie]='searchService.skilessTri'></test-autocomplete-single-value>
@@ -31,6 +31,10 @@
         <div fxLayout="row" fxLayoutAlign="space-between">
           <h5>Skills</h5>
           <p>{{job.skills}}</p>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between">
+            <h5>Location</h5>
+            <p>{{job.location}}</p>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between">
           <h5>Job title</h5>

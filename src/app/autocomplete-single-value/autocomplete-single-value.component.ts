@@ -4,7 +4,6 @@ import { MatAutocompleteTrigger } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Helper } from '../helper';
-import { ISearchNode } from '../main/search-service.service';
 
 
 export interface iValidator {
@@ -22,17 +21,19 @@ export interface Option {
  *  It contains 'Option { value: string, viewValue: string}'  so make sure to convert it before sending to server
  *  and convert back to 'Option' object after receving from server
  */
-export interface AutoCompleteSingleValueParams {
+export interface AutoCompleteParams {
   control: string;
   group: FormGroup;
   strictMode: boolean; // only allow to enter using selection mode
   name: string;
   id: string;
   validations: iValidator[];
-  placeholder?: string;
-  ngIf?: boolean;
+  placeholder: string;
+  ngIf: boolean;
   required?: boolean;
   hintMessage?: string;
+  isLoading?: boolean;
+  onSelect?: (option: Option) => void;
 }
 
 /**
@@ -45,12 +46,15 @@ export interface AutoCompleteSingleValueParams {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutocompleteSingleValueComponent extends Helper implements OnDestroy {
-  @Input('controlsValues') values: AutoCompleteSingleValueParams;
-  @Input('trie') search: any = null;
+  @Input('controlsValues') values: AutoCompleteParams;
+  public filteredOptions: Observable<Option[]>;
+  public fetchedData: any[] = [];
   @ViewChild(MatAutocompleteTrigger, { static: false }) autocomplete: MatAutocompleteTrigger;
-  public filteredOptions: Observable<String[]>;
 
-  constructor(public er: ElementRef, private cf: ChangeDetectorRef) {
+
+  constructor(
+    public er: ElementRef,
+    private cf: ChangeDetectorRef) {
     super();
     let that = this;
     this.er.nativeElement.addEventListener('focusout', () => {
@@ -62,12 +66,15 @@ export class AutocompleteSingleValueComponent extends Helper implements OnDestro
     this.filteredOptions = this.values.group
       .get(this.values.control)
       .valueChanges.pipe(
-        startWith<string>(''),
+        startWith<string | Option>(''),
+        map(value => {
+          if (value)
+            return (typeof value === 'string' ? value : value.viewValue)
+          else
+            return '';
+        }),
         map(value => this._filter(value))
       );
-    // if(this.values && this.values.api) {
-    //   this.loadData(this.values.api.url, this.values.api.mapFunction)
-    // }
     if (this.values) {
       this.subscriptions.push(this.values.group.get(this.values.control).statusChanges.subscribe((_) => {
         if (this.values.group.get(this.values.control).invalid) {
@@ -77,12 +84,33 @@ export class AutocompleteSingleValueComponent extends Helper implements OnDestro
     }
   }
 
-  private _filter(value: string): string[] {
-    const searchValue = (value || '').trim().toLowerCase();
-    if (this.search) {
-      return this.search.get(searchValue).map(({ value }) => value.node); 
+  public changeListener(): void {
+    const autoCompleteFormControl: AbstractControl = this.values.group.get(
+      this.values.control
+    );
+    let value: string | Option | undefined | null =
+      autoCompleteFormControl.value;
+    if (typeof value !== 'string') {
+      if (this.values.onSelect) {
+        this.values.onSelect(value);
+      }
     }
-    else return [];
+  }
+
+  private _filter(value: string): Option[] {
+    const searchValue = value.toLowerCase();
+    // return this.values.options.filter((textSearch: Option) =>
+    //   textSearch.viewValue.toLocaleLowerCase().includes(searchValue)
+    // );
+
+  }
+
+  public displayFunction(value?: Option): string | undefined {
+    return value ? value.viewValue : '';
+  }
+
+  ngOnDestroy(): void {
+    this.clearMemory();
   }
 
   /**
@@ -95,21 +123,15 @@ export class AutocompleteSingleValueComponent extends Helper implements OnDestro
    * it must be Option object 
    */
   private checkValidInput(): void {
-    const autoCompleteFormControl: AbstractControl = this.values.group.get(
-      this.values.control
-    );
+    const autoCompleteFormControl: AbstractControl = this.values.group.get(this.values.control);
     if (this.values.strictMode) {
       let value: string | Option | undefined | null = autoCompleteFormControl.value;
-      if (typeof value === 'string' && !this.autocomplete.panelOpen) { // check if focus is out and panel is close
+      if (typeof value === 'string' && !this.autocomplete.panelOpen) {
+        // check if focus is out and panel is close
         autoCompleteFormControl.setValue('');
         this.cf.detectChanges();
       }
     }
   }
-  
-  ngOnDestroy(): void {
-    this.clearMemory();
-  }
-
 
 }
