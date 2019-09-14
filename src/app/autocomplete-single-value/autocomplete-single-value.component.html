@@ -1,0 +1,28 @@
+<mat-form-field
+  [formGroup]='values.group'
+  [hintLabel]='values.hintMessage'
+  [class.has-success]='values.group.get(values.control).valid && (values.group.get(values.control).touched || values.group.get(values.control).dirty)'
+  [class.has-danger]='values.group.get(values.control).invalid && (values.group.get(values.control).touched || values.group.get(values.control).dirty)'
+  >
+  <input 
+    [placeholder]="values.placeholder" 
+    matInput 
+    [formControlName]="values.control" 
+    [name]="values.name"
+    [id]='values.id'
+    [matAutocomplete]="auto"
+    type="text"
+    [required]='values.required'
+    style='color:black'
+    inpt-disable
+  />
+  <mat-spinner *ngIf='values.isLoading' matSuffix [diameter]="20"></mat-spinner>
+  <mat-autocomplete #auto="matAutocomplete"  style='color:black'>
+    <mat-option *ngFor="let item of filteredOptions | async"  [value]="item">
+      {{item}}
+    </mat-option>
+  </mat-autocomplete>
+  <ng-container *ngFor='let validator of values.validations' ngProjectAs="mat-error">
+    <mat-error *ngIf="values.group.get(values.control).hasError(validator.name)">{{validator.message}}</mat-error>
+  </ng-container>
+</mat-form-field>

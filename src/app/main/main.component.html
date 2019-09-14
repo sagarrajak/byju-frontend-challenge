@@ -1,15 +1,43 @@
-
 <div class="container">
-    <mat-card *ngFor="let job of jobFetched">
-        <mat-card-header>
-            <mat-card-title>{{job.title}}</mat-card-title>
-            <mat-card-subtitle>{{job.companyname}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-            <div>
-                <h4><b>Location:</b></h4>
-                <p>{{job.location}}</p>
-            </div>   
-        </mat-card-content>
+  <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
+    <mat-expansion-panel [hideToggle]="false">
+      <mat-expansion-panel-header>Panel header</mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <test-autocomplete-single-value [controlsValues]="form('expirence')" ></test-autocomplete-single-value>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <test-autocomplete-single-value [controlsValues]="form('location')"></test-autocomplete-single-value>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <test-autocomplete-single-value [controlsValues]="form('skills')" [trie]='searchService.skilessTri'></test-autocomplete-single-value>
+        </div>
+      </div>
+      <mat-action-row>
+        <button mat-flat-button color='primary' (click)="onAction(event)">Submit</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+    <mat-card class="expension-panel" *cdkVirtualFor="let job of jobFetched">
+      <mat-card-content>
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <h4>{{job.title}}</h4>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <h5>Experience</h5>
+          <p>{{job.experience}}</p>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <h5>Skills</h5>
+          <p>{{job.skills}}</p>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <h5>Job title</h5>
+          <p>{{job.title}}</p>
+        </div>
+        <a download [href]="job.applylink" target='_blank'>click to apply</a>
+      </mat-card-content>
     </mat-card>
+  </cdk-virtual-scroll-viewport>
 </div>

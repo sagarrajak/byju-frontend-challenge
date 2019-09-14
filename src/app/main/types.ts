@@ -1,4 +1,4 @@
-export interface IJobType {
+import { FlexLayoutModule } from '@angular/flex-layout';export interface IJobType {
     applylink: string,
     companyname: string,
     created: string,
