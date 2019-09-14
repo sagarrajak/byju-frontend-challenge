@@ -12,7 +12,6 @@ import { AutoCompleteParams } from '../autocomplete-single-value/autocomplete-si
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
-
   public isApiCallInProgress: boolean = false;
   public jobFetched: IJobType[] = [];
   public skilesDataset: string[] = [];
@@ -38,9 +37,11 @@ export class MainComponent {
     this.http.get('https://nut-case.s3.amazonaws.com/jobs.json').subscribe((res: { data: IJobType[] }) => {
       this.isApiCallInProgress = false;
       this.jobFetched = res.data;
+      this.searchService.fetchedData = res.data;
       this.searchService.createSkillesMap(res.data);
       this.searchService.createLocationMap(res.data);
       this.searchService.createExpirenceMap(res.data);
+      console.log(res.data.length)
     }, _err => {
       this.isApiCallInProgress = false;
       this.jobFetched = [];
@@ -52,6 +53,33 @@ export class MainComponent {
   }
 
   public submit(): void {
-    console.log(this.searchForm.value);
+    const expirence: number = this.searchForm.value['expirence'] ? this.searchForm.value['expirence']['value'] : null;
+    const location: string = this.searchForm.value['location'] ? this.searchForm.value['location']['value'] : null;
+    const skills: string = this.searchForm.value['skills'] ? this.searchForm.value['skills']['value'] : null;
+    const finalArray = [];
+    const findalResult = {};
+
+    if (expirence) {
+      this.searchService.globalExperienceMap[+expirence].ind.forEach((key: number) => {
+        if (!findalResult[key]) finalArray.push(this.searchService.fetchedData[key]);
+      });
+    }
+    if (location && !expirence)
+      this.searchService.globalLocationMap[location].ind.forEach((key: number) => {
+        if (!findalResult[key]) finalArray.push(this.searchService.fetchedData[key]);
+      });
+    if (skills && !location && !expirence) {
+      this.searchService.globalSkillesMap[skills].ind.forEach((key: number) => {
+        if (!findalResult[key]) finalArray.push(this.searchService.fetchedData[key]);
+      });
+    }
+    this.jobFetched = finalArray;
+    //console.log(this.jobFetched);
   }
+
+  private mergeTwoArray() {}
+
+  private threeArray() {}
+
+
 }

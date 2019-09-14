@@ -18,6 +18,7 @@
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
+  <h4>Total Result Found {{jobFetched.length}}</h4>
   <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
     <mat-card class="expension-panel" *cdkVirtualFor="let job of jobFetched">
       <mat-card-content>

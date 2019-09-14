@@ -12,6 +12,7 @@ export interface ISearchNode {
   providedIn: 'root'
 })
 export class SearchServiceService {
+
   public globalSkillesMap: { [key: string]: ISearchNode } = {};
   public globalLocationMap: { [key: string]: ISearchNode } = {};
   public globalExperienceMap: { [key: number]: ISearchNode } = {};
@@ -19,6 +20,8 @@ export class SearchServiceService {
   public skilessTri: any = null;
   public locationTri: any = null;
   public experienceTri: any = null;
+
+  public fetchedData: IJobType[] = [];
 
   public createSkillesMap(data: IJobType[]): void {
     this.globalSkillesMap = {};
@@ -66,7 +69,7 @@ export class SearchServiceService {
     });
     this.skilessTri = new TriSearch();
     this.skilessTri.addFromObject(this.globalSkillesMap);
-    console.log(this.globalSkillesMap);
+    //console.log(this.globalSkillesMap);
   }
 
   public createLocationMap(data: IJobType[]): void {
@@ -110,15 +113,13 @@ export class SearchServiceService {
           }
         }
         else {
-          for (let i: number = 0; i <= +exp[0]; i++) {
-            if (this.globalExperienceMap[i]) this.globalExperienceMap[i].ind.push(index);
-            else {
-              this.globalExperienceMap[i] = { 
-                ind : [index],
-                node: `${i} years`,
-                key: i+'',
-              };
-            }
+          if (this.globalExperienceMap[+exp[0]]) this.globalExperienceMap[+exp[0]].ind.push(index);
+          else {
+            this.globalExperienceMap[+exp[0]] = { 
+              ind : [index],
+              node: `${+exp[0]} years`,
+              key: +exp[0]+'',
+            };
           }
         }
       }
