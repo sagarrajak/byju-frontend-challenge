@@ -5,6 +5,7 @@ import { IJobType } from './types';
 export interface ISearchNode {
   node: string;
   ind: number[];
+  key: string;
 }
 
 @Injectable({
@@ -33,7 +34,8 @@ export class SearchServiceService {
               else {
                 this.globalSkillesMap[inner.trim().toLowerCase()] = {
                   node: str,
-                  ind: [index]
+                  ind: [index],
+                  key: inner.trim().toLowerCase()
                 }
               }
             });
@@ -45,7 +47,8 @@ export class SearchServiceService {
             else {
               this.globalSkillesMap[inner.trim().toLowerCase()] = {
                 node: str,
-                ind: [index]
+                ind: [index],
+                key: inner.trim().toLowerCase()
               }
             }
           });
@@ -54,7 +57,8 @@ export class SearchServiceService {
           else {
             this.globalSkillesMap[strForMap] = {
               ind: [index],
-              node: str
+              node: str,
+              key: strForMap
             }
           }
         });
@@ -77,7 +81,8 @@ export class SearchServiceService {
             else {
               this.globalLocationMap[strForMap] = {
                 ind: [index],
-                node: str
+                node: str,
+                key: strForMap
               }
             }
           }
@@ -96,9 +101,10 @@ export class SearchServiceService {
           for (let i: number = +exp[0]; i <= +exp[1]; i++) {
             if (this.globalExperienceMap[i]) this.globalExperienceMap[i].ind.push(index);
             else {
-              this.globalExperienceMap[i] = { 
+              this.globalExperienceMap[i] = {
                 ind : [index],
-                node: `${i} years` 
+                node: `${i} years`,
+                key: i+'',
               };
             }
           }
@@ -109,7 +115,8 @@ export class SearchServiceService {
             else {
               this.globalExperienceMap[i] = { 
                 ind : [index],
-                node: `${i} years` 
+                node: `${i} years`,
+                key: i+'',
               };
             }
           }
@@ -118,9 +125,10 @@ export class SearchServiceService {
       else {
         if (this.globalExperienceMap[0]) this.globalExperienceMap[0].ind.push(index);
         else {
-          this.globalExperienceMap[0] = { 
+          this.globalExperienceMap[0] = {
             ind : [index],
-            node: `${0} years` 
+            node: `${0} years`,
+            key: '0',
           };
         }
       }

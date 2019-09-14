@@ -85,11 +85,9 @@ export class AutocompleteSingleValueComponent extends Helper implements OnDestro
   }
 
   public changeListener(): void {
-    const autoCompleteFormControl: AbstractControl = this.values.group.get(
-      this.values.control
-    );
-    let value: string | Option | undefined | null =
-      autoCompleteFormControl.value;
+    const autoCompleteFormControl: AbstractControl = this.values.group.get(this.values.control);
+    console.log(autoCompleteFormControl.value);
+    let value: string | Option | undefined | null = autoCompleteFormControl.value;
     if (typeof value !== 'string') {
       if (this.values.onSelect) {
         this.values.onSelect(value);
@@ -103,7 +101,7 @@ export class AutocompleteSingleValueComponent extends Helper implements OnDestro
       const trieData = this.trie.get(searchValue);
       return Object.keys(trieData).map(key => {
         return {
-          value: key,
+          value: trieData[key].value.key,
           viewValue: trieData[key].value.node
         }
       });

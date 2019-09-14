@@ -47,11 +47,11 @@ export class MainComponent {
     });
   }
 
-  public search(): void {
-
-  }
-
   public form(str: string): AutoCompleteParams {
     return this.dataset[str];
+  }
+
+  public submit(): void {
+    console.log(this.searchForm.value);
   }
 }
