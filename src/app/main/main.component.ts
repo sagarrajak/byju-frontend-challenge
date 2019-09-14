@@ -24,7 +24,6 @@ export class MainComponent {
     skills: new FormControl('')
   });
 
-
   constructor(
     private http: HttpClient,
     public searchService: SearchServiceService
@@ -53,33 +52,65 @@ export class MainComponent {
   }
 
   public submit(): void {
-    const expirence: number = this.searchForm.value['expirence'] ? this.searchForm.value['expirence']['value'] : null;
+    const expirence: string = this.searchForm.value['expirence'] ? this.searchForm.value['expirence']['value'] : null;
     const location: string = this.searchForm.value['location'] ? this.searchForm.value['location']['value'] : null;
     const skills: string = this.searchForm.value['skills'] ? this.searchForm.value['skills']['value'] : null;
-    const finalArray = [];
-    const findalResult = {};
-
-    if (expirence) {
-      this.searchService.globalExperienceMap[+expirence].ind.forEach((key: number) => {
-        if (!findalResult[key]) finalArray.push(this.searchService.fetchedData[key]);
-      });
-    }
-    if (location && !expirence)
-      this.searchService.globalLocationMap[location].ind.forEach((key: number) => {
-        if (!findalResult[key]) finalArray.push(this.searchService.fetchedData[key]);
-      });
-    if (skills && !location && !expirence) {
-      this.searchService.globalSkillesMap[skills].ind.forEach((key: number) => {
-        if (!findalResult[key]) finalArray.push(this.searchService.fetchedData[key]);
-      });
-    }
-    this.jobFetched = finalArray;
-    //console.log(this.jobFetched);
+    const expirenceIndexMap = expirence ? this.searchService.globalExperienceMap[expirence].ind : null;
+    const locationIndexMap = location ? this.searchService.globalLocationMap[location].ind : null;
+    const skillesIndexMap = skills ? this.searchService.globalSkillesMap[skills].ind : null;
+    this.jobFetched = this.union(expirenceIndexMap, locationIndexMap, skillesIndexMap);
   }
 
-  private mergeTwoArray() {}
-
-  private threeArray() {}
+  private union(expirence: number[], location: number[], skills: number[]): IJobType[] {
+    if (expirence && location && skills) {
+      // if user select three
+      return expirence.filter(ind => {
+        return location.indexOf(ind) !== -1;
+      }).filter(ind => {
+        return skills.indexOf(ind) !== -1;
+      }).map(ind => {
+        return this.searchService.fetchedData[ind];
+      });
+    }
+    else if (
+      (!expirence && (location && skills)) ||
+      ((expirence && location) && !skills) ||
+      (!location && (skills && expirence))
+    ) {
+      // if user select any two
+      if (!expirence) {
+        return location.filter(ind => {
+          return skills.indexOf(ind) !== -1;
+        }).map(ind => {
+          return this.searchService.fetchedData[ind];
+        });
+      }
+      else if (!location) {
+        return expirence.filter(ind => {
+          return skills.indexOf(ind) !== -1;
+        }).map(ind => {
+          return this.searchService.fetchedData[ind];
+        });
+      }
+      else {
+        return expirence.filter(ind => {
+          return location.indexOf(ind) !== -1;
+        }).map(ind => {
+          return this.searchService.fetchedData[ind];
+        });
+      }
+    }
+    else if (
+      (expirence && !location && !skills) ||
+      (!expirence && !location && skills) ||
+      (location && !skills && !expirence)
+    ) {
+      if (expirence) return expirence.map(index => this.searchService.fetchedData[index]);
+      if (location) return location.map(index => this.searchService.fetchedData[index]);
+      if (skills) return skills.map(index => this.searchService.fetchedData[index]);
+      return []
+    }
+  }
 
 
 }

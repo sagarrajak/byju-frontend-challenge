@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import * as TriSearch from 'trie-search';
 import { IJobType } from './types';
 
+/**
+ * Data struct  
+ */
 export interface ISearchNode {
-  node: string;
+  node: string; 
   ind: number[];
   key: string;
 }
@@ -12,7 +15,6 @@ export interface ISearchNode {
   providedIn: 'root'
 })
 export class SearchServiceService {
-
   public globalSkillesMap: { [key: string]: ISearchNode } = {};
   public globalLocationMap: { [key: string]: ISearchNode } = {};
   public globalExperienceMap: { [key: number]: ISearchNode } = {};
@@ -23,6 +25,12 @@ export class SearchServiceService {
 
   public fetchedData: IJobType[] = [];
 
+  /**
+   * @param data 
+   * Create trie of input data
+   * key -> search params 
+   * value -> ISearchNode
+   */
   public createSkillesMap(data: IJobType[]): void {
     this.globalSkillesMap = {};
     data.forEach((job, index) => {
@@ -72,6 +80,12 @@ export class SearchServiceService {
     //console.log(this.globalSkillesMap);
   }
 
+  /**
+   * @param data 
+   * create trie of location 
+   * key -> search params 
+   * value -> ISearchNode
+   */
   public createLocationMap(data: IJobType[]): void {
     this.globalLocationMap = {};
     data.forEach((data, index) => {
@@ -96,6 +110,11 @@ export class SearchServiceService {
     this.locationTri.addFromObject(this.globalLocationMap);
   }
 
+  /**
+   * @param data create tr
+   * key -> search params 
+   * value -> ISearchNode
+   */
   public createExpirenceMap(data: IJobType[]): void {
     data.forEach((job, index) => {
       if (job.experience) {

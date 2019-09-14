@@ -51,7 +51,6 @@ export class AutocompleteSingleValueComponent extends Helper implements OnDestro
   @Input('trie') trie: any = null;
   @ViewChild(MatAutocompleteTrigger, { static: false }) autocomplete: MatAutocompleteTrigger;
 
-
   constructor(
     public er: ElementRef,
     private cf: ChangeDetectorRef) {
